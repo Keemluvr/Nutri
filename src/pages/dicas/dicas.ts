@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
+import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { AngularFireAuth } from 'angularfire2/auth'
+import { HomePage } from '../home/home'
 /**
  * Generated class for the DicasPage page.
  *
@@ -15,11 +16,22 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class DicasPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  email: string
+
+  constructor(public navCtrl: NavController, 
+              public navParams: NavParams, 
+              public fire: AngularFireAuth,
+              public toastCtrl: ToastController) {
+    this.email = fire.auth.currentUser.email //Pega o email do usuário logado e coloca em email
+    //this.nome = fire.auth.currentUser.displayName //pega o nome de usuário, como não tem nenhum, vem null
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad DicasPage');
+  logout(){
+    let toast = this.toastCtrl.create({ duration: 2000, position: 'botom'})
+    this.fire.auth.signOut()
+    toast.setMessage('Deslogado com sucesso!').present()
+
+    this.navCtrl.setRoot(HomePage)
   }
 
 }
